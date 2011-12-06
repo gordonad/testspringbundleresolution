@@ -1,2 +1,14 @@
 The purpose of this repository is to develop a testcase which will check that the Spring framework bundles
 resolve inside an OSGi container.
+
+Pre-req's
+=========
+
+Gradle 1.0-milestone-6 was used for building. This should be installed as documented here: http://www.gradle.org/installation
+
+Building
+========
+
+gradle clean test
+
+
