@@ -11,4 +11,11 @@ Building
 
 gradle clean test
 
+Using Eclipse
+=============
+
+Since Gradle generates Eclipse .classpath files which contain absolute paths on the user's machine, these are not checked in.
+You should generate your own:
+
+gradle eclipse
 
