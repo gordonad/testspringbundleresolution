@@ -2,9 +2,17 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
+    maven {
+    	url "http://maven.springframework.org/milestone"
+    }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.+'
+    testCompile "junit:junit:4.+",
+                "org.ops4j.pax.exam:pax-exam-junit4:2.2.+",
+                "org.ops4j.pax.exam:pax-exam-link-mvn:2.2.+",
+                "org.ops4j.pax.exam:pax-exam-container-paxrunner:2.2.+"
+                
+    testRuntime "org.ops4j.pax.runner:pax-runner-no-jcl:1.7.5+"
 }
