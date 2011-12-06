@@ -1,0 +1,2 @@
+The purpose of this repository is to develop a testcase which will check that the Spring framework bundles
+resolve inside an OSGi container.
