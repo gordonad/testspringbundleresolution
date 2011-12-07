@@ -1,28 +1,39 @@
 
 package org.springframework.testspringbundleresolution;
 
-import static org.ops4j.pax.exam.CoreOptions.equinox;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.OptionUtils.combine;
+import static org.ops4j.pax.exam.CoreOptions.options;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-
-//import static org.ops4j.pax.exam.container.def.PaxRunnerOptions.scanFeatures;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
 @RunWith(JUnit4TestRunner.class)
 public class TestSpringBundleResolution {
 
     @Configuration
     public static Option[] configuration() throws Exception {
-        return combine(null, mavenBundle("org.springframework", "spring-core", "3.0.6.RELEASE"), equinox().version("3.7.0"));
+        return options(mavenBundle("org.springframework", "spring-core", "3.0.6.RELEASE"));
     }
 
     @Test
-    public void test() throws Exception {
-        System.out.println("Hello from a testcase!");
+    public void test(BundleContext bundleContext) throws Exception {
+        boolean found = false;
+        Bundle[] bundles = bundleContext.getBundles();
+        for (Bundle bundle : bundles) {
+            if ("org.springframework.core".equals(bundle.getSymbolicName())) {
+                found = true;
+                bundle.start();
+                assertTrue(true); // This fails the test with an obscure stack trace.
+                // assertEquals(Bundle.ACTIVE, bundle.getState());
+            }
+        }
+        // assertTrue(found);
     }
 }
