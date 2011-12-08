@@ -20,7 +20,9 @@ import org.osgi.framework.BundleContext;
 @RunWith(JUnit4TestRunner.class)
 public class TestSpringBundleResolution {
 
-    private static final String SPRINGFRAMEWORK_MAVEN_URL = "http://maven.springframework.org/milestone";
+    private static final String SPRINGFRAMEWORK_MILESTONE_MAVEN_URL = "http://maven.springframework.org/milestone";
+
+    private static final String EBR_EXTERNAL_MAVEN_URL = "http://repository.springsource.com/maven/bundles/external";
 
     private static final String SPRING_VERSION = "3.1.0.RC2";
 
@@ -29,16 +31,60 @@ public class TestSpringBundleResolution {
 
     @Configuration
     public static Option[] configuration() throws Exception {
-        return options(provisionSpringBundle("spring-core"), provisionSpringBundle("spring-beans"), junitBundles());
+        return options(//
+            provisionSpringBundle("spring-core"), //
+            provisionSpringBundle("spring-beans"), //
+            provisionSpringBundle("spring-aop"), //
+            provisionSpringBundle("spring-asm"), //
+            provisionSpringBundle("spring-aspects"), //
+            provisionSpringBundle("spring-context"), //
+            provisionSpringBundle("spring-context-support"), //
+            provisionSpringBundle("spring-expression"), //
+            provisionSpringBundle("spring-jdbc"), //
+            provisionSpringBundle("spring-jms"), //
+            provisionSpringBundle("spring-orm"), //
+            provisionSpringBundle("spring-oxm"), //
+            provisionSpringBundle("spring-tx"), //
+            provisionSpringBundle("spring-web"), //
+            provisionSpringBundle("spring-webmvc"), //
+            provisionSpringBundle("spring-webmvc-portlet"), //
+
+            // mandatory dependencies common to multiple Spring bundles
+            provisionExternalBundle("org.apache.commons", "com.springsource.org.apache.commons.logging", "1.1.1"), //
+            
+            // spring-aop mandatory dependencies
+            provisionExternalBundle("org.aopalliance", "com.springsource.org.aopalliance", "1.0.0"), //
+
+            // spring-jms mandatory dependencies
+            provisionExternalBundle("javax.jms", "com.springsource.javax.jms", "1.1.0"), //
+
+            // spring-web mandatory dependencies
+            provisionExternalBundle("javax.servlet", "javax.servlet", "3.0.0.v201103241009"), //
+
+            // spring-webmvc-portlet mandatory dependencies
+            provisionExternalBundle("javax.portlet", "com.springsource.javax.portlet", "2.0.0.v20110525"), //
+
+            junitBundles());
+    }
+
+    private static Option provisionExternalBundle(String groupId, String artifactId, String version) {
+        // TODO Auto-generated method stub
+        return provision(bundle(mavenUrl(EBR_EXTERNAL_MAVEN_URL, groupId, artifactId, version)));
     }
 
     private static Option provisionSpringBundle(String artifactId) {
-        return provision(bundle(springBundleUrl(artifactId)).start());
+        return provision(bundle(springBundleUrl(artifactId)));
     }
 
     private static String springBundleUrl(String artifactId) {
-        return SPRINGFRAMEWORK_MAVEN_URL + "/org/springframework/" + artifactId + "/" + SPRING_VERSION + "/" + artifactId + "-" + SPRING_VERSION
-            + ".jar";
+        String version = SPRING_VERSION;
+        String groupId = "org.springframework";
+        String repositoryUrl = SPRINGFRAMEWORK_MILESTONE_MAVEN_URL;
+        return mavenUrl(repositoryUrl, groupId, artifactId, version);
+    }
+
+    private static String mavenUrl(String repositoryUrl, String groupId, String artifactId, String version) {
+        return repositoryUrl + "/" + groupId.replaceAll("\\.", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + ".jar";
     }
 
     @Test
@@ -46,11 +92,13 @@ public class TestSpringBundleResolution {
         int found = 0;
         Bundle[] bundles = this.bundleContext.getBundles();
         for (Bundle bundle : bundles) {
-            if (bundle.getSymbolicName().startsWith("org.springframework")) {
+            String symbolicName = bundle.getSymbolicName();
+            if (symbolicName.startsWith("org.springframework")) {
                 found++;
-                assertEquals(Bundle.ACTIVE, bundle.getState());
+                bundle.start();
+                assertEquals(symbolicName + " is not ACTIVE", Bundle.ACTIVE, bundle.getState());
             }
         }
-        assertEquals(2, found);
+        assertEquals("Unexpected number of Spring bundles found", 16, found);
     }
 }
