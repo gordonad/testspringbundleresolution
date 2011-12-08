@@ -30,7 +30,7 @@ public class TestSpringBundleResolution {
     }
 
     @Test
-    public void testSpringCoreIsResolvable() throws Exception {
+    public void testSpringCoreIsResolvable(BundleContext bc /* XXX provoke testcase failure */) throws Exception {
         boolean found = false;
         Bundle[] bundles = this.bundleContext.getBundles();
         for (Bundle bundle : bundles) {
