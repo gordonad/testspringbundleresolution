@@ -3,14 +3,11 @@ apply plugin: 'eclipse'
 
 repositories {
 	mavenCentral()
-    maven {
-    	url "http://maven.springframework.org/milestone"
-    }
 }
 
 dependencies {
-    def paxExamVersion = '2.3.0.M1'
-    def equinoxVersion = '3.6.0.v20100517'
+    paxExamVersion = '2.3.0.M1'
+    equinoxVersion = '3.6.0.v20100517'
     
     testCompile "junit:junit:4.+",
                 "org.ops4j.pax.exam:pax-exam-junit4:$paxExamVersion",
