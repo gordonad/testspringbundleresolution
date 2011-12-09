@@ -111,7 +111,6 @@ public class TestSpringBundleResolution {
             String symbolicName = bundle.getSymbolicName();
             if (symbolicName.startsWith("org.springframework")) {
                 found++;
-                bundle.start();
                 assertEquals(symbolicName + " is not ACTIVE", Bundle.ACTIVE, bundle.getState());
             }
         }
