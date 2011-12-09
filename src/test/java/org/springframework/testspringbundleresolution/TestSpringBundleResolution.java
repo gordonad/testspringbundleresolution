@@ -83,6 +83,11 @@ public class TestSpringBundleResolution {
         return provision(bundle(mavenUrl(EBR_EXTERNAL_MAVEN_URL, groupId, artifactId, version)));
     }
 
+    private static String mavenUrl(String repositoryUrl, String groupId, String artifactId, String version) {
+        // Use Pax URL. See http://team.ops4j.org/wiki/display/paxurl/Mvn+Protocol
+        return "mvn:" + repositoryUrl + "!" + groupId + "/" + artifactId + "/" + version + "/" + "jar";
+    }
+    
     private static Option provisionSpringBundle(String artifactId) {
         return provision(bundle(springBundleUrl(artifactId)));
     }
@@ -91,10 +96,10 @@ public class TestSpringBundleResolution {
         String version = SPRING_VERSION;
         String groupId = "org.springframework";
         String repositoryUrl = SPRINGFRAMEWORK_MILESTONE_MAVEN_URL;
-        return mavenUrl(repositoryUrl, groupId, artifactId, version);
+        return plainMavenUrl(repositoryUrl, groupId, artifactId, version);
     }
-
-    private static String mavenUrl(String repositoryUrl, String groupId, String artifactId, String version) {
+    
+    private static String plainMavenUrl(String repositoryUrl, String groupId, String artifactId, String version) {
         return repositoryUrl + "/" + groupId.replaceAll("\\.", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + ".jar";
     }
 
