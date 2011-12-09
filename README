@@ -1,5 +1,9 @@
 The purpose of this repository is to develop a testcase which will check that the Spring framework bundles
-resolve inside an OSGi container.
+resolve inside an OSGi container. See https://jira.springsource.org/browse/SPR-8791.
+
+The testcase could be made more efficient by cacheing Spring bundles in the local Maven repository, but since it
+is intended for running inside the Spring build, this may not be particularly helpful and may even cause problems
+if a build is re-spun to change the OSGi metadata without modifying the version to be published.
 
 Pre-req's
 =========
